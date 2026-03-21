@@ -1,0 +1,122 @@
+安装技能 | skill_name=究极备份 | reason=用户主动安装究极备份技能，用于一键备份和恢复目录
+
+# 究极备份
+
+为 Hanako打造的一键备份+恢复技能，防止改崩。
+
+## ⚠️ 安装路径注意
+
+- ✅ 正确路径：`~/.hanako/skills/究极备份/SKILL.md`
+- ❌ 错误路径：`~/.claude/skills/`（这是 Claude Code 的目录，不要装错）
+- 验证方法：安装前先执行 `ls ~/.hanako/skills/` 确认目录存在
+
+## 功能
+
+- 一键备份当前工作目录
+- 自动按日期整理备份文件
+- 智能恢复：支持「恢复今天的」「恢复最近的」「恢复昨天的」
+- 终端也能操作（Hanako 打不开时也能恢复）
+
+## 备份位置
+
+```
+~/Desktop/hanako backup/
+└── 2026-03-20/
+    ├── backup.tar.gz
+    └── restore.sh
+```
+
+## 核心指令
+
+### 备份
+
+当用户说：
+- 「帮我备份」
+- 「备份当前目录」
+- 「做一个备份」
+
+执行以下步骤：
+
+1. 获取当前日期，格式 YYYY-MM-DD
+2. 创建备份目录：`~/Desktop/hanako backup/{日期}/`
+3. 打包当前工作目录为 tar.gz：
+   ```bash
+   cd ~/Desktop/hanako
+   tar -czf "~/Desktop/hanako backup/{日期}/backup.tar.gz" .
+   ```
+4. 创建恢复脚本 `restore.sh`：
+   ```bash
+   #!/bin/bash
+   echo "正在恢复备份..."
+   cd ~/Desktop/hanako
+   rm -rf ./*  # 先清空当前目录（可选，视情况）
+   tar -xzf "~/Desktop/hanako backup/{日期}/backup.tar.gz" -C .
+   echo "恢复完成！"
+   ```
+5. 给脚本执行权限：`chmod +x restore.sh`
+6. 告诉用户备份完成，包括备份路径和日期
+
+### 恢复
+
+当用户说：
+- 「恢复今天的备份」
+- 「恢复最近的备份」
+- 「恢复昨天的备份」
+- 「恢复 {日期} 的备份」
+
+**重要：恢复前先备份当前状态！**
+
+1. 先执行一次当前状态的备份（可选但推荐）
+2. 根据用户说的关键词解析目标日期：
+   - 「今天的」→ 今天日期
+   - 「最近的」→ `ls -t ~/Desktop/hanako backup/ | head -1`
+   - 「昨天的」→ 昨天日期
+   - 具体日期 → 用户给的日期
+3. 检查备份文件是否存在：`~/Desktop/hanako backup/{日期}/backup.tar.gz`
+4. 执行恢复：
+   ```bash
+   cd ~/Desktop/hanako
+   rm -rf ./*
+   tar -xzf "~/Desktop/hanako backup/{日期}/backup.tar.gz" -C .
+   ```
+5. 告诉用户恢复完成
+
+### 查看备份列表
+
+当用户说：
+- 「有哪些备份」
+- 「列出所有备份」
+- 「查看备份」
+
+执行：
+```bash
+ls -lt ~/Desktop/hanako backup/
+```
+
+列出所有备份的日期和时间。
+
+## 🖥️ 终端恢复（Hanako 打不开时）
+
+当 Hanako 软件本身崩溃，无法启动时：
+
+1. 打开终端（Terminal）
+2. 运行恢复脚本：
+   ```bash
+   ~/Desktop/hanako\ backup/2026-03-20/restore.sh
+   ```
+   （把日期改成你想恢复的那天）
+
+或者恢复最近的：
+   ```bash
+   LATEST=$(ls -t ~/Desktop/hanako\ backup/ | grep -E "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" | head -1)
+   ~/Desktop/hanako\ backup/$LATEST/restore.sh
+   ```
+
+3. 搞定！再去打开 Hanako 就行
+
+## 注意事项
+
+- 备份文件包含所有文件（包括隐藏文件）
+- 恢复前建议先备份当前状态，防止数据丢失
+- 备份位置固定在 `~/Desktop/hanako backup/`
+- 日期格式统一为 YYYY-MM-DD
