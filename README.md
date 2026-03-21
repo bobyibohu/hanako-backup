@@ -24,7 +24,7 @@
 ### 3. 终端恢复（Hanako打不开时）
 
 ```bash
-~/Desktop/hanako backup/2026-03-20/restore.sh
+~/Desktop/hanako-backup/YYYY-MM-DD/restore.sh
 ```
 
 把日期改成你实际备份的日期。
@@ -43,7 +43,7 @@
 ## 备份位置
 
 ```
-~/Desktop/hanako backup/
+~/Desktop/hanako-backup/
 └── YYYY-MM-DD/
     ├── backup.tar.gz
     └── restore.sh
