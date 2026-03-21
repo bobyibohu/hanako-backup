@@ -1,8 +1,18 @@
 安装技能 | skill_name=究极备份 | reason=用户主动安装究极备份技能，用于一键备份和恢复目录
 
+---
+
+以下是技能内容（安装命令触发后会自动写入 SKILL.md）：
+
+---
+name: 究极备份
+description: 一键备份和恢复 Hanako 工作目录，防止改崩。支持按日期备份、智能恢复、终端救援模式。
+user-invocable: true
+---
+
 # 究极备份
 
-为 Hanako打造的一键备份+恢复技能，防止改崩。
+为 Hanako 打造的一键备份+恢复技能，防止改崩。
 
 ## ⚠️ 安装路径注意
 
@@ -49,7 +59,7 @@
    #!/bin/bash
    echo "正在恢复备份..."
    cd ~/Desktop/hanako
-   rm -rf ./*  # 先清空当前目录（可选，视情况）
+   rm -rf ./*
    tar -xzf "~/Desktop/hanako-backup/{日期}/backup.tar.gz" -C .
    echo "恢复完成！"
    ```
@@ -102,14 +112,14 @@ ls -lt ~/Desktop/hanako-backup/
 1. 打开终端（Terminal）
 2. 运行恢复脚本：
    ```bash
-   ~/Desktop/hanako\ backup/2026-03-20/restore.sh
+   ~/Desktop/hanako-backup/2026-03-20/restore.sh
    ```
    （把日期改成你想恢复的那天）
 
 或者恢复最近的：
    ```bash
-   LATEST=$(ls -t ~/Desktop/hanako\ backup/ | grep -E "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" | head -1)
-   ~/Desktop/hanako\ backup/$LATEST/restore.sh
+   LATEST=$(ls -t ~/Desktop/hanako-backup/ | grep -E "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" | head -1)
+   ~/Desktop/hanako-backup/$LATEST/restore.sh
    ```
 
 3. 搞定！再去打开 Hanako 就行
